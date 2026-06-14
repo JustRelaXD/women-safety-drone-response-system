@@ -2,7 +2,7 @@
 
 Real-time women safety workspace built around three related demos: a city drone-response simulation, a stealth SOS system, and an evidence capture service. Together, they model patrol monitoring, silent emergency dispatch, Safe Walk escort flows, incident media capture, and cloud storage for later review.
 
-Deployed demo: [women-safety-drone-response-system.vercel.app](https://women-safety-drone-response-system.vercel.app/)
+Drone simulation demo: [women-safety-drone-response-system.vercel.app](https://women-safety-drone-response-system.vercel.app/)
 
 ## Summary
 
@@ -149,7 +149,7 @@ For the evidence capture service, update the Cloudinary configuration in `eviden
 
 Note: both the `stealth-sos` backend and the `evidence-capture` API default to port `8000`. Run them separately or change one of the ports if you want both active at the same time.
 
-## Screenshots
+## Screenshots and Videos
 
 <details>
 <summary><strong>Drone Simulation</strong></summary>
@@ -215,6 +215,12 @@ Note: both the `stealth-sos` backend and the `evidence-capture` API default to p
 5. Cloudinary asset library view
 
    <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
+
+</details>
+
+## Drone Simulation Video
+
+[Watch the drone simulation demo on YouTube](https://www.youtube.com/watch?v=2zTBq7tOjJs)
 
 ## Notes
 
