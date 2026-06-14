@@ -149,9 +149,6 @@ Note: both the `stealth-sos` backend and the `evidence-capture` API default to p
 
 ## Screenshots
 
-<details open>
-<summary><strong>Screenshots</strong></summary>
-
 <details>
 <summary><strong>Drone Simulation</strong></summary>
 
@@ -216,8 +213,6 @@ Note: both the `stealth-sos` backend and the `evidence-capture` API default to p
 5. Cloudinary asset library view
 
    <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
-
-</details>
 
 ## Notes
 
