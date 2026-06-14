@@ -2,8 +2,6 @@
 
 Real-time women safety workspace built around three related demos: a city drone-response simulation, a stealth SOS system, and an evidence capture service. Together, they model patrol monitoring, silent emergency dispatch, Safe Walk escort flows, incident media capture, and cloud storage for later review.
 
-Drone simulation demo: [women-safety-drone-response-system.vercel.app](https://women-safety-drone-response-system.vercel.app/)
-
 ## Summary
 
 - Live drone-response simulation for monitoring patrol activity and city hotspots.
@@ -217,10 +215,6 @@ Note: both the `stealth-sos` backend and the `evidence-capture` API default to p
    <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
 
 </details>
-
-## Drone Simulation Video
-
-[Watch the drone simulation demo on YouTube](https://www.youtube.com/watch?v=2zTBq7tOjJs)
 
 ## Notes
 
