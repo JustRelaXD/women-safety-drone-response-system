@@ -2,48 +2,16 @@
 
 Combined workspace for the women safety drone simulation and the evidence capture service.
 
-<details open>
-<summary><strong>Demo Screenshots & Videos</strong></summary>
-
-1. Screenshot 1
-
-   <img src="./screenshots-and-videos/p1.jpeg" alt="Screenshot 1" width="100%" />
-
-2. Screenshot 2
-
-   <img src="./screenshots-and-videos/p2.jpeg" alt="Screenshot 2" width="100%" />
-
-3. Screenshot 3
-
-   <img src="./screenshots-and-videos/p3.jpeg" alt="Screenshot 3" width="100%" />
-
-4. Screenshot 4
-
-   <img src="./screenshots-and-videos/p4.jpeg" alt="Screenshot 4" width="100%" />
-
-5. Screenshot 5
-
-   <img src="./screenshots-and-videos/p5.jpeg" alt="Screenshot 5" width="100%" />
-
-6. Demo Video
-
-   <video controls width="100%">
-     <source src="./screenshots-and-videos/v2.mp4" type="video/mp4" />
-     Your browser does not support the video tag. Use the file in `screenshots-and-videos/v2.mp4` instead.
-   </video>
-
-</details>
-
 ## Repository Layout
 
 ```text
 women-safety-drone-response-system/
 ├── screenshots-and-videos/
-│   ├── p1.jpeg            # Screenshot 1
-│   ├── p2.jpeg            # Screenshot 2
-│   ├── p3.jpeg            # Screenshot 3
-│   ├── p4.jpeg            # Screenshot 4
-│   ├── p5.jpeg            # Screenshot 5
+│   ├── p1.jpeg            # Operations deck overview
+│   ├── p2.jpeg            # Dashboard status and active incidents
+│   ├── p3.jpeg            # SOS dispatch in progress
+│   ├── p4.jpeg            # SOS arrival and audio recording
+│   ├── p5.jpeg            # Safe Walk escort in progress
 │   └── v2.mp4             # Demo video
 ├── sos-and-safe-walk-drone-simulation/
 │   ├── src/                # React + TypeScript app source
@@ -138,6 +106,39 @@ If you are on Windows PowerShell, activate the virtual environment with:
 The simulation project uses a `.env` file for runtime configuration, typically including `DATABASE_URL` and `PORT`.
 
 For the evidence capture service, update the Cloudinary configuration in `evidence-capture/uploader.py` with your own credentials before deploying.
+
+## Demo Media
+
+<details open>
+<summary><strong>Screenshots & Video</strong></summary>
+
+1. Operations deck overview
+
+   <img src="./screenshots-and-videos/p1.jpeg" alt="Operations deck overview" width="100%" />
+
+2. Dashboard status and active incidents
+
+   <img src="./screenshots-and-videos/p2.jpeg" alt="Dashboard status and active incidents" width="100%" />
+
+3. SOS dispatch in progress
+
+   <img src="./screenshots-and-videos/p3.jpeg" alt="SOS dispatch in progress" width="100%" />
+
+4. SOS arrival and audio recording
+
+   <img src="./screenshots-and-videos/p4.jpeg" alt="SOS arrival and audio recording" width="100%" />
+
+5. Safe Walk escort in progress
+
+   <img src="./screenshots-and-videos/p5.jpeg" alt="Safe Walk escort in progress" width="100%" />
+
+6. Demo video
+
+   The video file is available here:
+
+   [Open `v2.mp4`](./screenshots-and-videos/v2.mp4)
+
+</details>
 
 ## Notes
 
