@@ -1,13 +1,13 @@
 # Women Safety Drone Response System
 
-Real-time women safety platform combining a drone-response simulation with an evidence capture service.
+Real-time women safety platform that combines a drone-response simulation with an evidence capture service. The simulation covers patrol monitoring, SOS dispatch, and Safe Walk escort flows on an interactive map. The evidence capture service records incident video, audio, and GPS trail data, hashes uploaded files, and stores them in cloud storage for later review.
 
 ## Summary
 
 - Live drone-response simulation for monitoring patrol activity and city hotspots.
 - SOS workflow for emergency alert dispatch and drone coordination.
 - Safe Walk escort flow for guided movement support in public spaces.
-- Evidence capture service for uploading and retrieving incident media and metadata.
+- Evidence capture service for uploading, hashing, and retrieving incident media and GPS metadata.
 - Shared project workspace that keeps the simulation and backend evidence pipeline organized in one repository.
 
 ## Repository Layout
@@ -46,9 +46,10 @@ Main drone response demo application.
 
 FastAPI-based evidence capture service.
 
-- `main.py` exposes the upload and retrieval endpoints.
-- `uploader.py` handles Cloudinary uploads.
-- `hasher.py` generates file hashes for uploaded evidence.
+- `main.py` exposes the incident upload and lookup endpoints.
+- `uploader.py` sends uploaded media to Cloudinary.
+- `hasher.py` generates SHA-256 hashes for uploaded evidence.
+- The API accepts video, audio, GPS data, and an `incident_id` per submission.
 - `requirements.txt` lists the Python packages needed to run the service.
 - `__pycache__/` is generated automatically by Python and can be ignored.
 
@@ -113,6 +114,8 @@ For the evidence capture service, update the Cloudinary configuration in `eviden
 <details open>
 <summary><strong>Screenshots</strong></summary>
 
+### Drone Simulation
+
 1. Operations deck overview
 
    <img src="./screenshots-and-videos/p1.jpeg" alt="Operations deck overview" width="100%" />
@@ -132,6 +135,28 @@ For the evidence capture service, update the Cloudinary configuration in `eviden
 5. Safe Walk escort in progress
 
    <img src="./screenshots-and-videos/p5.jpeg" alt="Safe Walk escort in progress" width="100%" />
+
+### Evidence Capture
+
+6. Evidence capture continued recording
+
+   <img src="./screenshots-and-videos/p7.jpeg" alt="Evidence capture continued recording" width="100%" />
+
+7. Evidence file list and stored uploads
+
+   <img src="./screenshots-and-videos/p9.jpeg" alt="Evidence file list and stored uploads" width="100%" />
+
+8. Evidence capture recording and saved entry
+
+   <img src="./screenshots-and-videos/p10.jpeg" alt="Evidence capture recording and saved entry" width="100%" />
+
+9. Evidence capture running with uploaded evidence visible
+
+   <img src="./screenshots-and-videos/p11.jpeg" alt="Evidence capture running with uploaded evidence visible" width="100%" />
+
+10. Cloudinary asset library view
+
+    <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
 
 </details>
 
