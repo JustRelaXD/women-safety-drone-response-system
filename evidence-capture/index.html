@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naira — Evidence Capture</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .logo { font-size: 28px; font-weight: bold; color: #8b5cf6; margin-bottom: 8px; }
+    .subtitle { font-size: 14px; color: #888; margin-bottom: 60px; }
+    .sos-btn {
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: #dc2626;
+      border: 6px solid #ef4444;
+      color: white;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(220,38,38,0.5);
+      transition: all 0.2s;
+      margin-bottom: 30px;
+    }
+    .sos-btn:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(220,38,38,0.8); }
+    .sos-btn.recording { background: #166534; border-color: #22c55e; box-shadow: 0 0 40px rgba(34,197,94,0.5); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 40px rgba(34,197,94,0.5)} 50%{box-shadow:0 0 80px rgba(34,197,94,0.9)} }
+    .status {
+      font-size: 16px; color: #888;
+      margin-bottom: 20px; text-align: center;
+      min-height: 24px;
+    }
+    .status.active { color: #22c55e; }
+    .timer { font-size: 48px; font-weight: bold; color: #8b5cf6; margin-bottom: 40px; display: none; }
+    video {
+      width: 320px; height: 240px;
+      border-radius: 12px;
+      border: 2px solid #333;
+      margin-bottom: 40px;
+      background: #111;
+      display: none;
+    }
+    .evidence-section { width: 100%; max-width: 600px; }
+    .evidence-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #8b5cf6; }
+    .evidence-item {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .evidence-item .time { font-size: 12px; color: #888; margin-bottom: 8px; }
+    .evidence-item .hash { font-size: 11px; color: #555; margin-bottom: 10px; word-break: break-all; }
+    .evidence-item a {
+      display: inline-block;
+      background: #8b5cf6;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .upload-status { font-size: 13px; color: #22c55e; margin-top: 8px; }
+    .gps-info { font-size: 12px; color: #666; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+  <div class="logo">NAIRA</div>
+  <div class="subtitle">Women's Safety Evidence Capture</div>
+
+  <button class="sos-btn" id="sosBtn" onclick="toggleSOS()">SOS</button>
+
+  <div class="status" id="status">Press SOS to start recording</div>
+  <div class="timer" id="timer">00:00</div>
+
+  <video id="preview" autoplay muted playsinline></video>
+
+  <div class="evidence-section">
+    <div class="evidence-title" id="evidenceTitle"></div>
+    <div id="evidenceList"></div>
+  </div>
+
+<script>
+  const CLOUD_NAME = "dqtjhawtb";
+  const UPLOAD_PRESET = "naira_evidence";
+
+  let isRecording = false;
+  let mediaRecorder = null;
+  let stream = null;
+  let chunks = [];
+  let timerInterval = null;
+  let uploadInterval = null;
+  let seconds = 0;
+  let incidentId = null;
+  let gpsCoords = null;
+  let evidenceItems = [];
+
+  // Get GPS on load
+  navigator.geolocation.getCurrentPosition(
+    pos => { gpsCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude }; },
+    err => { gpsCoords = { lat: "unavailable", lng: "unavailable" }; }
+  );
+
+  async function toggleSOS() {
+    if (!isRecording) {
+      await startRecording();
+    } else {
+      stopRecording();
+    }
+  }
+
+  async function startRecording() {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+      const preview = document.getElementById('preview');
+      preview.srcObject = stream;
+      preview.style.display = 'block';
+
+      incidentId = "INC-" + Date.now();
+      chunks = [];
+      seconds = 0;
+
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      mediaRecorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+      mediaRecorder.start(1000);
+
+      isRecording = true;
+      document.getElementById('sosBtn').classList.add('recording');
+      document.getElementById('sosBtn').textContent = 'STOP';
+      document.getElementById('status').textContent = '🔴 Recording + uploading evidence...';
+      document.getElementById('status').classList.add('active');
+      document.getElementById('timer').style.display = 'block';
+      document.getElementById('evidenceTitle').textContent = 'Evidence Files';
+
+      // Timer
+      timerInterval = setInterval(() => {
+        seconds++;
+        const m = String(Math.floor(seconds/60)).padStart(2,'0');
+        const s = String(seconds%60).padStart(2,'0');
+        document.getElementById('timer').textContent = m + ':' + s;
+      }, 1000);
+
+      // Upload every 30 seconds
+      uploadInterval = setInterval(() => uploadChunk(), 30000);
+
+      // First upload after 5 seconds for demo
+      setTimeout(() => uploadChunk(), 5000);
+
+    } catch(err) {
+      document.getElementById('status').textContent = 'Error: Please allow camera and microphone access';
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder) mediaRecorder.stop();
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    clearInterval(timerInterval);
+    clearInterval(uploadInterval);
+
+    // Final upload
+    uploadChunk();
+
+    isRecording = false;
+    document.getElementById('sosBtn').classList.remove('recording');
+    document.getElementById('sosBtn').textContent = 'SOS';
+    document.getElementById('status').textContent = '✅ Recording stopped. Evidence saved.';
+    document.getElementById('status').classList.remove('active');
+    document.getElementById('preview').style.display = 'none';
+  }
+
+  async function uploadChunk() {
+    if (chunks.length === 0) return;
+
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    chunks = [];
+
+    const hash = await generateHash(blob);
+    const timestamp = new Date().toISOString();
+
+    const formData = new FormData();
+    formData.append('file', blob, 'evidence.webm');
+    formData.append('upload_preset', UPLOAD_PRESET);
+    formData.append('folder', 'naira/incidents/' + incidentId);
+    formData.append('context', 'hash=' + hash + '|incident=' + incidentId + '|time=' + timestamp);
+
+    try {
+      document.getElementById('status').textContent = '⬆️ Uploading evidence to cloud...';
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (data.secure_url) {
+        addEvidenceItem(data.secure_url, hash, timestamp);
+        if (isRecording) document.getElementById('status').textContent = '🔴 Recording + uploading evidence...';
+      }
+    } catch(err) {
+      console.error('Upload error:', err);
+    }
+  }
+
+  async function generateHash(blob) {
+    const buffer = await blob.arrayBuffer();
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2,'0')).join('').substring(0, 32);
+  }
+
+  function addEvidenceItem(url, hash, timestamp) {
+    const list = document.getElementById('evidenceList');
+    const div = document.createElement('div');
+    div.className = 'evidence-item';
+    div.innerHTML = `
+      <div class="time">📅 ${new Date(timestamp).toLocaleString()}</div>
+      <div class="hash">🔒 Hash: ${hash}</div>
+      ${gpsCoords ? `<div class="gps-info">📍 GPS: ${gpsCoords.lat}, ${gpsCoords.lng}</div>` : ''}
+      <a href="${url}" target="_blank">▶ View Evidence</a>
+      <div class="upload-status">✅ Stored securely in cloud</div>
+    `;
+    list.prepend(div);
+  }
+</script>
+</body>
+</html>
