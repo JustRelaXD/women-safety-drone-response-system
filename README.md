@@ -2,6 +2,8 @@
 
 Real-time women safety workspace built around three related demos: a city drone-response simulation, a stealth SOS system, and an evidence capture service. Together, they model patrol monitoring, silent emergency dispatch, Safe Walk escort flows, incident media capture, and cloud storage for later review.
 
+Deployed demo: [women-safety-drone-response-system.vercel.app](https://women-safety-drone-response-system.vercel.app/)
+
 ## Summary
 
 - Live drone-response simulation for monitoring patrol activity and city hotspots.
