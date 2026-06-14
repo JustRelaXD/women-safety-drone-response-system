@@ -1,14 +1,14 @@
 # Women Safety Drone Response System
 
-Real-time women safety platform that combines a drone-response simulation with an evidence capture service. The simulation covers patrol monitoring, SOS dispatch, and Safe Walk escort flows on an interactive map. The evidence capture service records incident video, audio, and GPS trail data, hashes uploaded files, and stores them in cloud storage for later review.
+Real-time women safety workspace built around three related demos: a city drone-response simulation, a stealth SOS system, and an evidence capture service. Together, they model patrol monitoring, silent emergency dispatch, Safe Walk escort flows, incident media capture, and cloud storage for later review.
 
 ## Summary
 
 - Live drone-response simulation for monitoring patrol activity and city hotspots.
-- SOS workflow for emergency alert dispatch and drone coordination.
+- Stealth SOS workflow for discreet emergency response and drone dispatch.
 - Safe Walk escort flow for guided movement support in public spaces.
 - Evidence capture service for uploading, hashing, and retrieving incident media and GPS metadata.
-- Shared project workspace that keeps the simulation and backend evidence pipeline organized in one repository.
+- Shared workspace that keeps the three demos organized in one repository.
 
 ## Repository Layout
 
@@ -22,6 +22,9 @@ women-safety-drone-response-system/
 │   ├── 01_schema.sql       # Database schema for the simulation backend
 │   ├── demo.sql            # Sample data for testing
 │   └── vite.config.ts      # Vite build configuration
+├── stealth-sos/
+│   ├── backend/            # FastAPI + Socket.IO guardian drone backend
+│   └── frontend/           # Vite + React stealth SOS interface
 └── evidence-capture/
     ├── main.py             # FastAPI app for evidence upload and retrieval
     ├── uploader.py         # Cloudinary upload helper
@@ -42,6 +45,16 @@ Main drone response demo application.
 - `01_schema.sql` and `demo.sql` support the database-backed parts of the demo.
 - `dist/` is the generated production build output.
 
+### `stealth-sos`
+
+Silent SOS demo with a separate backend/frontend split.
+
+- `backend/` contains the FastAPI and Socket.IO service that dispatches the nearest drone.
+- `frontend/` contains the Vite + React UI with shake and keyboard SOS detection.
+- `backend/drone_controller.py` simulates the drone fleet and movement path.
+- `frontend/src/components/` holds the map, detector, drone marker, and arrival controls.
+- `frontend/.env` can point the UI at the local backend through `VITE_SOCKET_URL`.
+
 ### `evidence-capture`
 
 FastAPI-based evidence capture service.
@@ -52,14 +65,15 @@ FastAPI-based evidence capture service.
 - The API accepts video, audio, GPS data, and an `incident_id` per submission.
 - `requirements.txt` lists the Python packages needed to run the service.
 - `__pycache__/` is generated automatically by Python and can be ignored.
+- `index.html` is the lightweight browser-facing UI for the evidence capture demo.
 
 ## Local Setup
 
 ### 1) Prerequisites
 
 - Node.js 18+ and npm
-- Python 3.10+
 - PostgreSQL if you want the database-backed simulation features
+- Python 3.10+ for the stealth SOS backend and evidence capture service
 - Cloudinary credentials if you want evidence uploads to work
 
 ### 2) Run the drone simulation app
@@ -87,7 +101,27 @@ The app is configured to run on `http://localhost:3000` when started through the
 If you want database-backed routing or persistence, configure the database connection in the project environment before starting the server.
 The server reads `DATABASE_URL` and optional `PORT` from the environment.
 
-### 3) Run the evidence capture API
+### 3) Run the stealth SOS demo
+
+```bash
+cd stealth-sos/backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python main.py
+```
+
+In a second terminal:
+
+```bash
+cd stealth-sos/frontend
+npm install
+npm run dev
+```
+
+The backend runs on `http://localhost:8000` and the frontend runs on `http://localhost:5173`.
+
+### 4) Run the evidence capture API
 
 ```bash
 cd evidence-capture
@@ -103,11 +137,15 @@ If you are on Windows PowerShell, activate the virtual environment with:
 .venv\Scripts\Activate.ps1
 ```
 
-### 4) Configure environment variables
+### 5) Configure environment variables
 
 The simulation project uses a `.env` file for runtime configuration, typically including `DATABASE_URL` and `PORT`.
 
+For the stealth SOS frontend, set `frontend/.env` with `VITE_SOCKET_URL=http://localhost:8000` if you are not using the default backend URL.
+
 For the evidence capture service, update the Cloudinary configuration in `evidence-capture/uploader.py` with your own credentials before deploying.
+
+Note: both the `stealth-sos` backend and the `evidence-capture` API default to port `8000`. Run them separately or change one of the ports if you want both active at the same time.
 
 ## Screenshots
 

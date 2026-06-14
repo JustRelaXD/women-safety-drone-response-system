@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Base resets ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  background: #080A0E;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #080A0E;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Leaflet dark overrides ────────────────────────────────────────── */
+.leaflet-container {
+  background: #0D1117 !important;
+  font-family: 'Inter', sans-serif;
+}
+.leaflet-tile-pane { filter: brightness(0.35) saturate(0.4) hue-rotate(200deg); }
+.leaflet-control-attribution { display: none !important; }
+.leaflet-control-zoom a {
+  background: #141920 !important;
+  color: #8B929E !important;
+  border-color: #1E2530 !important;
+}
+.leaflet-control-zoom a:hover {
+  background: #1E2530 !important;
+  color: #ffffff !important;
+}
+
+/* ─── Drone pulse ring ──────────────────────────────────────────────── */
+@keyframes droneRing {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  100% { transform: scale(3.5); opacity: 0;   }
+}
+.drone-pulse-ring {
+  animation: droneRing 1.6s ease-out infinite;
+}
+
+/* ─── Glassmorphism utility ─────────────────────────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 4px; }
+::-webkit-scrollbar-track  { background: #0D1117; }
+::-webkit-scrollbar-thumb  { background: #1E2530; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3B82F6; }
+
+/* ─── Timeline connector line ───────────────────────────────────────── */
+.timeline-line::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 28px;
+  bottom: -28px;
+  width: 1px;
+  background: linear-gradient(to bottom, #3B82F6, transparent);
+}
+
+/* ─── Counter number glow ───────────────────────────────────────────── */
+.stat-glow {
+  text-shadow: 0 0 40px rgba(59,130,246,0.5);
+}
+
+/* ─── Noise texture overlay ─────────────────────────────────────────── */
+.noise::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
