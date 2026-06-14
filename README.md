@@ -1,18 +1,19 @@
 # Women Safety Drone Response System
 
-Combined workspace for the women safety drone simulation and the evidence capture service.
+Real-time women safety platform combining a drone-response simulation with an evidence capture service.
+
+## Summary
+
+- Live drone-response simulation for monitoring patrol activity and city hotspots.
+- SOS workflow for emergency alert dispatch and drone coordination.
+- Safe Walk escort flow for guided movement support in public spaces.
+- Evidence capture service for uploading and retrieving incident media and metadata.
+- Shared project workspace that keeps the simulation and backend evidence pipeline organized in one repository.
 
 ## Repository Layout
 
 ```text
 women-safety-drone-response-system/
-├── screenshots-and-videos/
-│   ├── p1.jpeg            # Operations deck overview
-│   ├── p2.jpeg            # Dashboard status and active incidents
-│   ├── p3.jpeg            # SOS dispatch in progress
-│   ├── p4.jpeg            # SOS arrival and audio recording
-│   ├── p5.jpeg            # Safe Walk escort in progress
-│   └── v2.mp4             # Demo video
 ├── sos-and-safe-walk-drone-simulation/
 │   ├── src/                # React + TypeScript app source
 │   ├── public/             # Static assets used by the frontend
@@ -131,12 +132,6 @@ For the evidence capture service, update the Cloudinary configuration in `eviden
 5. Safe Walk escort in progress
 
    <img src="./screenshots-and-videos/p5.jpeg" alt="Safe Walk escort in progress" width="100%" />
-
-6. Demo video
-
-   The video file is available here:
-
-   [Open `v2.mp4`](./screenshots-and-videos/v2.mp4)
 
 </details>
 
