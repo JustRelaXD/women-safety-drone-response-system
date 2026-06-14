@@ -55,6 +55,20 @@ Silent SOS demo with a separate backend/frontend split.
 - `frontend/src/components/` holds the map, detector, drone marker, and arrival controls.
 - `frontend/.env` can point the UI at the local backend through `VITE_SOCKET_URL`.
 
+### Stealth SOS Screenshots
+
+1. Stealth SOS landing screen
+
+   <img src="./screenshots-and-videos/stealth-1.jpeg" alt="Stealth SOS landing screen" width="100%" />
+
+2. Stealth SOS motion trigger view
+
+   <img src="./screenshots-and-videos/stealth-2.jpeg" alt="Stealth SOS motion trigger view" width="100%" />
+
+3. Stealth SOS trigger explanation screen
+
+   <img src="./screenshots-and-videos/stealth-3.jpeg" alt="Stealth SOS trigger explanation screen" width="100%" />
+
 ### `evidence-capture`
 
 FastAPI-based evidence capture service.
