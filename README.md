@@ -55,20 +55,6 @@ Silent SOS demo with a separate backend/frontend split.
 - `frontend/src/components/` holds the map, detector, drone marker, and arrival controls.
 - `frontend/.env` can point the UI at the local backend through `VITE_SOCKET_URL`.
 
-### Stealth SOS Screenshots
-
-1. Stealth SOS landing screen
-
-   <img src="./screenshots-and-videos/stealth-1.jpeg" alt="Stealth SOS landing screen" width="100%" />
-
-2. Stealth SOS motion trigger view
-
-   <img src="./screenshots-and-videos/stealth-2.jpeg" alt="Stealth SOS motion trigger view" width="100%" />
-
-3. Stealth SOS trigger explanation screen
-
-   <img src="./screenshots-and-videos/stealth-3.jpeg" alt="Stealth SOS trigger explanation screen" width="100%" />
-
 ### `evidence-capture`
 
 FastAPI-based evidence capture service.
@@ -166,7 +152,8 @@ Note: both the `stealth-sos` backend and the `evidence-capture` API default to p
 <details open>
 <summary><strong>Screenshots</strong></summary>
 
-### Drone Simulation
+<details>
+<summary><strong>Drone Simulation</strong></summary>
 
 1. Operations deck overview
 
@@ -188,27 +175,47 @@ Note: both the `stealth-sos` backend and the `evidence-capture` API default to p
 
    <img src="./screenshots-and-videos/p5.jpeg" alt="Safe Walk escort in progress" width="100%" />
 
-### Evidence Capture
+</details>
 
-6. Evidence capture continued recording
+<details>
+<summary><strong>Stealth SOS</strong></summary>
+
+1. Stealth SOS landing screen
+
+   <img src="./screenshots-and-videos/stealth-1.jpeg" alt="Stealth SOS landing screen" width="100%" />
+
+2. Stealth SOS motion trigger view
+
+   <img src="./screenshots-and-videos/stealth-2.jpeg" alt="Stealth SOS motion trigger view" width="100%" />
+
+3. Stealth SOS trigger explanation screen
+
+   <img src="./screenshots-and-videos/stealth-3.jpeg" alt="Stealth SOS trigger explanation screen" width="100%" />
+
+</details>
+
+<details>
+<summary><strong>Evidence Capture</strong></summary>
+
+1. Evidence capture continued recording
 
    <img src="./screenshots-and-videos/p7.jpeg" alt="Evidence capture continued recording" width="100%" />
 
-7. Evidence file list and stored uploads
+2. Evidence file list and stored uploads
 
    <img src="./screenshots-and-videos/p9.jpeg" alt="Evidence file list and stored uploads" width="100%" />
 
-8. Evidence capture recording and saved entry
+3. Evidence capture recording and saved entry
 
    <img src="./screenshots-and-videos/p10.jpeg" alt="Evidence capture recording and saved entry" width="100%" />
 
-9. Evidence capture running with uploaded evidence visible
+4. Evidence capture running with uploaded evidence visible
 
    <img src="./screenshots-and-videos/p11.jpeg" alt="Evidence capture running with uploaded evidence visible" width="100%" />
 
-10. Cloudinary asset library view
+5. Cloudinary asset library view
 
-    <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
+   <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
 
 </details>
 
