@@ -108,10 +108,10 @@ The simulation project uses a `.env` file for runtime configuration, typically i
 
 For the evidence capture service, update the Cloudinary configuration in `evidence-capture/uploader.py` with your own credentials before deploying.
 
-## Demo Media
+## Screenshots
 
 <details open>
-<summary><strong>Screenshots & Video</strong></summary>
+<summary><strong>Screenshots</strong></summary>
 
 1. Operations deck overview
 
@@ -138,5 +138,4 @@ For the evidence capture service, update the Cloudinary configuration in `eviden
 ## Notes
 
 - The simulation and evidence capture service are separate subprojects under this root folder.
-- The screenshot/video block is kept near the top so it is visible in GitHub, while still remaining collapsible.
 - Generated folders such as `dist/`, `node_modules/`, and `__pycache__/` are build/runtime artifacts.
