@@ -5,31 +5,32 @@ Combined workspace for the women safety drone simulation and the evidence captur
 <details open>
 <summary><strong>Demo Screenshots & Videos</strong></summary>
 
-### Screenshots
+1. Screenshot 1
 
-<table>
-  <tr>
-    <td align="center">
-      <img src="./sos-and-safe-walk-drone-simulation/public/drone.png" alt="Drone asset" width="320" />
-      <br />
-      <sub>Drone asset used by the simulation UI</sub>
-    </td>
-    <td align="center">
-      <img src="./sos-and-safe-walk-drone-simulation/val_batch0_labels.jpg" alt="Model validation labels" width="320" />
-      <br />
-      <sub>Example detection / validation output</sub>
-    </td>
-  </tr>
-</table>
+   <img src="./screenshots-and-videos/p1.jpeg" alt="Screenshot 1" width="100%" />
 
-### Video Demo
+2. Screenshot 2
 
-Add short demo videos here in `mp4` or `webm` format when available.
+   <img src="./screenshots-and-videos/p2.jpeg" alt="Screenshot 2" width="100%" />
 
-Suggested location:
+3. Screenshot 3
 
-- `./media/demo.mp4`
-- `./media/sos-mode.webm`
+   <img src="./screenshots-and-videos/p3.jpeg" alt="Screenshot 3" width="100%" />
+
+4. Screenshot 4
+
+   <img src="./screenshots-and-videos/p4.jpeg" alt="Screenshot 4" width="100%" />
+
+5. Screenshot 5
+
+   <img src="./screenshots-and-videos/p5.jpeg" alt="Screenshot 5" width="100%" />
+
+6. Demo Video
+
+   <video controls width="100%">
+     <source src="./screenshots-and-videos/v2.mp4" type="video/mp4" />
+     Your browser does not support the video tag. Use the file in `screenshots-and-videos/v2.mp4` instead.
+   </video>
 
 </details>
 
@@ -37,6 +38,13 @@ Suggested location:
 
 ```text
 women-safety-drone-response-system/
+├── screenshots-and-videos/
+│   ├── p1.jpeg            # Screenshot 1
+│   ├── p2.jpeg            # Screenshot 2
+│   ├── p3.jpeg            # Screenshot 3
+│   ├── p4.jpeg            # Screenshot 4
+│   ├── p5.jpeg            # Screenshot 5
+│   └── v2.mp4             # Demo video
 ├── sos-and-safe-walk-drone-simulation/
 │   ├── src/                # React + TypeScript app source
 │   ├── public/             # Static assets used by the frontend
