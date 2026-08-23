@@ -1,0 +1,9 @@
+# Audio env — YAMNet (sound events) + faster-whisper (distress keywords)
+# NOTE: keep this separate from requirements-vision.txt. This env needs
+# protobuf>=7 (tensorflow) while mediapipe pins protobuf<5.
+faster-whisper==1.2.1
+sounddevice==0.5.6
+tensorflow==2.21.0
+tensorflow-hub==0.16.1
+av==17.1.0
+numpy==2.2.6

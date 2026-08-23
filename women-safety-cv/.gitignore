@@ -1,0 +1,16 @@
+# Bundled virtualenvs (never commit these — recreate with the requirements files)
+venv_audio/
+venv_vision/
+
+# Python
+__pycache__/
+*.pyc
+
+# Runtime state / artifacts
+shared_state.json
+shared_state.json.tmp
+alert_clips/
+*.mp4
+
+# OS
+.DS_Store
