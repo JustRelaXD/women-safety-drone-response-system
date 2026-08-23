@@ -20,6 +20,7 @@ The pieces fit together as one emergency-response flow:
 | Rescue SOS System | Android SOS app + Flask dispatch backend | https://rescue-sos-system.vercel.app/ |
 | Chatbot | "Here to Listen" workplace safety chatbot | https://chatbot-women-safety.vercel.app/ |
 | Naira App | Safety response network (Expo app + FastAPI) | https://naira-app-women-safety.vercel.app/ |
+| Hardware Demo | Drone hardware demonstration video | [Watch on YouTube](https://youtu.be/hJWw36x3pUc?si=vxUgjsTPoMrR-vtl) |
 
 ## Repository Layout
 
@@ -147,10 +148,6 @@ cd rescue-sos-system/backend && pip install flask && python sos_server.py
 ## Deployments
 
 Each app deploys to Vercel independently (settings mirror in `vercel.json` within each subproject). See per-project READMEs for env var requirements (`VITE_PLANNER_API_URL`, `EXPO_PUBLIC_BACKEND_URL`, `TWILIO_*`, `USE_MOCK_DB`, etc).
-
-## Hardware Demo
-
-[Watch the hardware demonstration on YouTube](https://youtu.be/hJWw36x3pUc?si=vxUgjsTPoMrR-vtl)
 
 ## Screenshots
 
