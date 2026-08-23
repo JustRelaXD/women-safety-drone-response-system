@@ -150,10 +150,7 @@ Each app deploys to Vercel independently (settings mirror in `vercel.json` withi
 
 ## Hardware Demo
 
-<video controls width="100%">
-  <source src="./hardware-video.mp4" type="video/mp4" />
-  Your browser does not support embedded video. [Open the hardware video](./hardware-video.mp4).
-</video>
+[Watch the hardware demonstration video](./hardware-video.mp4)
 
 ## Screenshots
 
