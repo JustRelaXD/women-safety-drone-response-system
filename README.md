@@ -32,7 +32,8 @@ women-safety-drone-response-system/
 ├── drone-route-optimization/   # Drone route planner (A*/Theta*, DuckDB Spatial, FastAPI)
 ├── sitl-bridge/                # ArduPilot SITL bridge (FastAPI + pymavlink)
 ├── rescue-sos-system/          # Rescue SOS system (Android app + Flask backend)
-└── screenshots-and-videos/     # Demo media for the platform
+├── screenshots/                # Demo screenshots for the platform
+└── hardware-video.mp4          # Hardware demonstration video
 ```
 
 ## Projects
@@ -141,36 +142,43 @@ cd rescue-sos-system/backend && pip install flask && python sos_server.py
 - Each subproject has its own git history-independent lifecycle; this monorepo holds the current working tree of each.
 - Generated folders (`node_modules/`, `dist/`, `__pycache__/`, venvs) and large datasets (building footprints, `.parquet`) are never committed here.
 - Secrets live in per-project env files / Vercel project settings — never commit real `.env` values.
-- `screenshots-and-videos/` holds demo imagery and video.
+- `screenshots/` holds demo imagery; `hardware-video.mp4` is the hardware demonstration video.
 
 ## Deployments
 
 Each app deploys to Vercel independently (settings mirror in `vercel.json` within each subproject). See per-project READMEs for env var requirements (`VITE_PLANNER_API_URL`, `EXPO_PUBLIC_BACKEND_URL`, `TWILIO_*`, `USE_MOCK_DB`, etc).
 
+## Hardware Demo
+
+<video controls width="100%">
+  <source src="./hardware-video.mp4" type="video/mp4" />
+  Your browser does not support embedded video. [Open the hardware video](./hardware-video.mp4).
+</video>
+
 ## Screenshots
 
 ### SOS Dashboard
 
-<img src="./screenshots-and-videos/sos%20dashboard.png" alt="SOS Dashboard" width="100%" />
+<img src="./screenshots/sos%20dashboard.png" alt="SOS Dashboard" width="100%" />
 
 ### Dashboard with SITL
 
-<img src="./screenshots-and-videos/dashboard%20with%20sitl.jpeg" alt="Dashboard with SITL" width="100%" />
+<img src="./screenshots/dashboard%20with%20sitl.jpeg" alt="Dashboard with SITL" width="100%" />
 
 ### Simulation
 
-<img src="./screenshots-and-videos/simulation.jpeg" alt="Simulation" width="100%" />
+<img src="./screenshots/simulation.jpeg" alt="Simulation" width="100%" />
 
-<img src="./screenshots-and-videos/simulation%20sitl.jpeg" alt="Simulation with SITL" width="100%" />
+<img src="./screenshots/simulation%20sitl.jpeg" alt="Simulation with SITL" width="100%" />
 
 ### Chatbot
 
-<img src="./screenshots-and-videos/chatbot.png" alt="Chatbot" width="100%" />
+<img src="./screenshots/chatbot.png" alt="Chatbot" width="100%" />
 
 ### Naira App
 
-<img src="./screenshots-and-videos/naira.png" alt="Naira App" width="100%" />
+<img src="./screenshots/naira.png" alt="Naira App" width="100%" />
 
 ### Rescue SOS System
 
-<img src="./screenshots-and-videos/Rescue%20SOS%20System.png" alt="Rescue SOS System" width="100%" />
+<img src="./screenshots/Rescue%20SOS%20System.png" alt="Rescue SOS System" width="100%" />
