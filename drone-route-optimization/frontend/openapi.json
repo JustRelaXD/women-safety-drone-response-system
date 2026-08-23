@@ -1,0 +1,968 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Emergency Response Drone Route Planner",
+    "description": "A*/Theta*/visibility-graph route planner over Overture Maps data (GPS waypoints only).",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/no-fly-zones": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "No Fly Zones",
+        "description": "The imported DGCA airspace overlay (red/amber rings + snapshot age).\n\nReads a local snapshot produced by ``scripts/import_no_fly_zones.py``.\n``scope`` selects which snapshot to serve (``settings.no_fly_zones_files``,\ne.g. ``punjab`` or ``india``); an empty zone list when the scope is\nunknown or its file is missing.  The default ``punjab`` scope falls\nback to ``settings.no_fly_zones_file`` so existing deployments keep\nworking unchanged.  Serves the frontend map overlay; the planner\nitself consumes the same rings via config (display scope never\nchanges the planner's obstacle set).",
+        "operationId": "no_fly_zones_no_fly_zones_get",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "punjab",
+              "title": "Scope"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoFlyZonesResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "ops"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/generate-route": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Generate Route",
+        "operationId": "generate_route_generate_route_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/replan": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Replan",
+        "description": "Recompute the route from the current position (same semantics as\ngenerate-route; kept as a separate endpoint so controllers can call\nit mid-mission without re-sending mission metadata).",
+        "operationId": "replan_replan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mission": {
+      "post": {
+        "tags": [
+          "planning"
+        ],
+        "summary": "Create Mission",
+        "operationId": "create_mission_mission_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MissionCreateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "buildings_parquet": {
+            "type": "string",
+            "title": "Buildings Parquet"
+          },
+          "water_parquet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Water Parquet"
+          },
+          "memory_limit": {
+            "type": "string",
+            "title": "Memory Limit"
+          },
+          "grid_resolution_m": {
+            "type": "number",
+            "title": "Grid Resolution M"
+          },
+          "safety_margin_m": {
+            "type": "number",
+            "title": "Safety Margin M"
+          },
+          "default_altitude_m": {
+            "type": "number",
+            "title": "Default Altitude M"
+          },
+          "planner_algorithm": {
+            "type": "string",
+            "title": "Planner Algorithm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "version",
+          "buildings_parquet",
+          "water_parquet",
+          "memory_limit",
+          "grid_resolution_m",
+          "safety_margin_m",
+          "default_altitude_m",
+          "planner_algorithm"
+        ],
+        "title": "HealthResponse",
+        "description": "GET /health payload."
+      },
+      "MissionCreateRequest": {
+        "properties": {
+          "start_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Start Lat"
+          },
+          "start_lon": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Start Lon"
+          },
+          "goal_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Goal Lat"
+          },
+          "goal_lon": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Goal Lon"
+          },
+          "altitude_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 500.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Altitude M"
+          },
+          "grid_resolution_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 500.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grid Resolution M"
+          },
+          "safety_margin_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 200.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Safety Margin M"
+          },
+          "speed_mps": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 200.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Mps"
+          },
+          "snap_start_goal": {
+            "type": "boolean",
+            "title": "Snap Start Goal",
+            "default": false
+          },
+          "algorithm": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "astar",
+                  "theta_star",
+                  "visibility"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm"
+          },
+          "no_fly_zones": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/NoFlyZone"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Fly Zones"
+          },
+          "mission_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64,
+                "minLength": 3
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mission Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_lat",
+          "start_lon",
+          "goal_lat",
+          "goal_lon"
+        ],
+        "title": "MissionCreateRequest",
+        "description": "Body of POST /mission: register a mission and plan it."
+      },
+      "MissionRequest": {
+        "properties": {
+          "start_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Start Lat"
+          },
+          "start_lon": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Start Lon"
+          },
+          "goal_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Goal Lat"
+          },
+          "goal_lon": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Goal Lon"
+          },
+          "altitude_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 500.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Altitude M"
+          },
+          "grid_resolution_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 500.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grid Resolution M"
+          },
+          "safety_margin_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 200.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Safety Margin M"
+          },
+          "speed_mps": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 200.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Mps"
+          },
+          "snap_start_goal": {
+            "type": "boolean",
+            "title": "Snap Start Goal",
+            "default": false
+          },
+          "algorithm": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "astar",
+                  "theta_star",
+                  "visibility"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm"
+          },
+          "no_fly_zones": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/NoFlyZone"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Fly Zones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_lat",
+          "start_lon",
+          "goal_lat",
+          "goal_lon"
+        ],
+        "title": "MissionRequest",
+        "description": "Body of POST /generate-route."
+      },
+      "MissionResponse": {
+        "properties": {
+          "mission_id": {
+            "type": "string",
+            "title": "Mission Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "route": {
+            "$ref": "#/components/schemas/RouteResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission_id",
+          "status",
+          "route"
+        ],
+        "title": "MissionResponse",
+        "description": "A registered mission with its plan."
+      },
+      "NoFlyZone": {
+        "properties": {
+          "ring": {
+            "items": {
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "minItems": 4,
+            "title": "Ring"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ring"
+        ],
+        "title": "NoFlyZone",
+        "description": "A closed polygon ring of (lat, lon) vertices in WGS84."
+      },
+      "NoFlyZoneInfo": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "red",
+              "amber"
+            ],
+            "title": "Kind"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "ring": {
+            "items": {
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Ring"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "name",
+          "ring"
+        ],
+        "title": "NoFlyZoneInfo",
+        "description": "One no-fly polygon for the frontend overlay."
+      },
+      "NoFlyZoneScopeInfo": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "zones": {
+            "type": "integer",
+            "title": "Zones"
+          },
+          "fetched_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fetched At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "zones",
+          "fetched_at"
+        ],
+        "title": "NoFlyZoneScopeInfo",
+        "description": "One available overlay scope (e.g. punjab / india) and its size."
+      },
+      "NoFlyZonesResponse": {
+        "properties": {
+          "scope": {
+            "type": "string",
+            "title": "Scope"
+          },
+          "fetched_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fetched At"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "zones": {
+            "items": {
+              "$ref": "#/components/schemas/NoFlyZoneInfo"
+            },
+            "type": "array",
+            "title": "Zones"
+          },
+          "available": {
+            "items": {
+              "$ref": "#/components/schemas/NoFlyZoneScopeInfo"
+            },
+            "type": "array",
+            "title": "Available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scope",
+          "fetched_at",
+          "source",
+          "zones"
+        ],
+        "title": "NoFlyZonesResponse",
+        "description": "GET /no-fly-zones payload (red/amber overlay + snapshot age).\n\n``scope`` is the requested (or default) snapshot; ``available`` lists\nevery configured scope so the frontend can render a switcher."
+      },
+      "ReplanRequest": {
+        "properties": {
+          "start_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Start Lat"
+          },
+          "start_lon": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Start Lon"
+          },
+          "goal_lat": {
+            "type": "number",
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Goal Lat"
+          },
+          "goal_lon": {
+            "type": "number",
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Goal Lon"
+          },
+          "altitude_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 500.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Altitude M"
+          },
+          "grid_resolution_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 500.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grid Resolution M"
+          },
+          "safety_margin_m": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 200.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Safety Margin M"
+          },
+          "speed_mps": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 200.0,
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Mps"
+          },
+          "snap_start_goal": {
+            "type": "boolean",
+            "title": "Snap Start Goal",
+            "default": false
+          },
+          "algorithm": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "astar",
+                  "theta_star",
+                  "visibility"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Algorithm"
+          },
+          "no_fly_zones": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/NoFlyZone"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "No Fly Zones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "start_lat",
+          "start_lon",
+          "goal_lat",
+          "goal_lon"
+        ],
+        "title": "ReplanRequest",
+        "description": "Body of POST /replan: recompute from a new current position."
+      },
+      "RouteResponse": {
+        "properties": {
+          "mission_id": {
+            "type": "string",
+            "title": "Mission Id"
+          },
+          "distance": {
+            "type": "number",
+            "title": "Distance",
+            "description": "route length in metres"
+          },
+          "estimated_time": {
+            "type": "number",
+            "title": "Estimated Time",
+            "description": "flight time in seconds"
+          },
+          "waypoints": {
+            "items": {
+              "$ref": "#/components/schemas/Waypoint"
+            },
+            "type": "array",
+            "title": "Waypoints"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning"
+          },
+          "backup_waypoints": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Waypoint"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Backup Waypoints"
+          },
+          "zones_crossed": {
+            "items": {
+              "$ref": "#/components/schemas/NoFlyZoneInfo"
+            },
+            "type": "array",
+            "title": "Zones Crossed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mission_id",
+          "distance",
+          "estimated_time",
+          "waypoints"
+        ],
+        "title": "RouteResponse",
+        "description": "A computed route: GPS waypoints plus mission-level metadata.\n\nNormally ``warning`` is null and ``backup_waypoints`` is the direct\nstart->goal line (an operator-verifiable shortcut).  When no\ncollision-free corridor exists, the planner degrades instead of failing:\n``waypoints`` becomes a best-effort route (closest reachable point, then\na straight segment to the goal) and ``warning`` explains why and what to\nverify before flight."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Waypoint": {
+        "properties": {
+          "lat": {
+            "type": "number",
+            "title": "Lat"
+          },
+          "lon": {
+            "type": "number",
+            "title": "Lon"
+          },
+          "alt": {
+            "type": "number",
+            "title": "Alt"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lat",
+          "lon",
+          "alt"
+        ],
+        "title": "Waypoint",
+        "description": "A single GPS waypoint the drone controller must fly to."
+      }
+    }
+  }
+}

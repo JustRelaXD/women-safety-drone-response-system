@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- base ---------- */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Leaflet chrome (dark mode aware) ---------- */
+.leaflet-container {
+  font: inherit;
+  background: #e8eaee;
+}
+.dark .leaflet-container {
+  background: #0b1220;
+}
+.dark .leaflet-bar a {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+.dark .leaflet-bar a:hover {
+  background: #334155;
+  color: #fff;
+}
+.dark .leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.85);
+  color: #64748b;
+}
+.dark .leaflet-control-attribution a {
+  color: #94a3b8;
+}
+.dark .leaflet-tooltip {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+.dark .leaflet-tooltip-top::before {
+  border-top-color: #1e293b;
+}
+
+/* ---------- drone marker ---------- */
+.drone-icon {
+  background: transparent;
+  border: none;
+}
+.drone-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.drone-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.35);
+  animation: pulse-ring 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.drone-arrow {
+  position: absolute;
+  inset: 5px;
+  color: #10b981;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  transition: transform 0.12s linear;
+  will-change: transform;
+}
+@keyframes pulse-ring {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.35);
+  }
+}
+
+/* ---------- start / goal pins ---------- */
+.drone-pin {
+  background: transparent;
+  border: none;
+}
+.pin {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pin svg {
+  width: 100%;
+  height: 100%;
+}
+.pin.start {
+  color: #10b981;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+}
+.pin.goal {
+  color: #f43f5e;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.35));
+}
+
+/* ---------- numbered waypoint markers ---------- */
+.drone-wp {
+  background: transparent;
+  border: none;
+}
+.wp {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #10b981;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.dark .wp {
+  border-color: #0f172a;
+}
+
+/* ---------- route drawing ---------- */
+/* Live partial route: a plain sky-blue line that GROWS as the backend
+   streams search progress (each update replaces the polyline with a
+   longer one) - the growth itself is the animation. */
+.route-partial {
+  stroke-linecap: round;
+}
+/* Final route: fade in gently once planning completes. */
+.route-final {
+  animation: route-fade 0.5s ease-out;
+}
+@keyframes route-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- marker cluster ---------- */
+.marker-cluster-small {
+  background-color: rgba(16, 185, 129, 0.5) !important;
+}
+.marker-cluster-small div {
+  background-color: rgba(16, 185, 129, 0.9) !important;
+  color: #fff;
+}
+.marker-cluster-medium {
+  background-color: rgba(5, 150, 105, 0.5) !important;
+}
+.marker-cluster-medium div {
+  background-color: rgba(5, 150, 105, 0.9) !important;
+  color: #fff;
+}
+.marker-cluster-large {
+  background-color: rgba(4, 120, 87, 0.5) !important;
+}
+.marker-cluster-large div {
+  background-color: rgba(4, 120, 87, 0.9) !important;
+  color: #fff;
+}

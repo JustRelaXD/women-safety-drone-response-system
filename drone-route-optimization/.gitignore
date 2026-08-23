@@ -1,0 +1,28 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Generated spatial data
+*.duckdb
+*.duckdb.wal
+spill/
+benchmarks/results/
+planner/data/
+
+# Large geospatial datasets - downloaded from Overture, never committed
+*.parquet
+*.geojson
+*.state
+
+# Secrets and local env
+.env
+
+# Test caches
+.pytest_cache/
