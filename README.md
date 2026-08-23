@@ -11,6 +11,11 @@ The pieces fit together as one emergency-response flow:
 3. **Dispatch & routing** — `drone-route-optimization` computes building-avoiding GPS waypoints (A* / Theta* over Overture Maps + DuckDB), and `sos-dashboard` is the command center where operators watch drones patrol, respond to SOS alerts, and run Safe Walk escorts.
 4. **Support & follow-up** — `chatbot` provides a private, AI-supported conversation with Indian legal info (POSH Act) and structured case state.
 
+## Demo Videos
+
+- [Hardware demonstration](https://youtu.be/hJWw36x3pUc?si=vxUgjsTPoMrR-vtl)
+- [Software demonstration](https://youtu.be/5ItFbDMdI0U?si=UOC6-G5YHMoLHQPn)
+
 ## Deployed Apps
 
 | App | Description | Link |
@@ -20,7 +25,6 @@ The pieces fit together as one emergency-response flow:
 | Rescue SOS System | Android SOS app + Flask dispatch backend | https://rescue-sos-system.vercel.app/ |
 | Chatbot | "Here to Listen" workplace safety chatbot | https://chatbot-women-safety.vercel.app/ |
 | Naira App | Safety response network (Expo app + FastAPI) | https://naira-app-women-safety.vercel.app/ |
-| Hardware Demo | Drone hardware demonstration video | [Watch on YouTube](https://youtu.be/hJWw36x3pUc?si=vxUgjsTPoMrR-vtl) |
 
 ## Repository Layout
 
