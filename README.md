@@ -30,6 +30,7 @@ women-safety-drone-response-system/
 ├── sos-dashboard/              # Drone dispatch & monitoring command center (React + MapLibre)
 ├── women-safety-cv/            # Real-time threat detection (YOLO + MediaPipe + audio)
 ├── drone-route-optimization/   # Drone route planner (A*/Theta*, DuckDB Spatial, FastAPI)
+├── sitl-bridge/                # ArduPilot SITL bridge (FastAPI + pymavlink)
 ├── rescue-sos-system/          # Rescue SOS system (Android app + Flask backend)
 └── screenshots-and-videos/     # Demo media for the platform
 ```
@@ -87,6 +88,13 @@ Route planner (A* / Theta* / visibility graph) over Overture Maps building and w
 - `frontend/` is a test UI: mission planner, dashboard, live telemetry, mission history, no-fly zone layers.
 - Heavy geospatial data is downloaded at runtime and never committed (see `scripts/download_buildings.py`, `dl_punjab.py`).
 
+### sitl-bridge — ArduPilot SITL Bridge
+
+Bridges a simulated drone (ArduPilot SITL) to the command center: connects over MAVLink (UDP), streams live telemetry (position, altitude, heading), and exposes patrol/loiter control over a WebSocket for the dashboard.
+
+- **FastAPI + pymavlink** — `udp:127.0.0.1:14550` SITL endpoint, patrol altitude and loiter radius config at the top of `bridge.py`.
+- WebSocket endpoint for live state + control from `sos-dashboard`.
+
 ### rescue-sos-system — SOS System + Android App
 
 A small, hackathon-style end-to-end SOS system:
@@ -120,6 +128,9 @@ venv_vision/bin/python unified_detection.py  # terminal 2
 
 # Route planner (uv + DuckDB; see SETUP.md)
 cd drone-route-optimization && uv sync
+
+# SITL bridge (needs ArduPilot SITL running on udp:127.0.0.1:14550)
+cd sitl-bridge && pip install fastapi pymavlink uvicorn && python bridge.py
 
 # SOS system laptop demo: backend first, then Android app (Android Studio), then dashboard
 cd rescue-sos-system/backend && pip install flask && python sos_server.py
