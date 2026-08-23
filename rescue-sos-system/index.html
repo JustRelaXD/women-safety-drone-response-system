@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rescue SOS — Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 2rem; }
+    h1 { text-align: center; font-size: 1.8rem; margin-bottom: 1.5rem; color: #f87171; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .card { background: #1e293b; border-radius: 12px; padding: 1.5rem; border: 1px solid #334155; }
+    .card h2 { font-size: 1.1rem; color: #94a3b8; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .drone { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #334155; }
+    .drone:last-child { border-bottom: none; }
+    .drone-id { font-weight: 600; }
+    .badge { padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .badge-available { background: #065f46; color: #6ee7b7; }
+    .badge-dispatched { background: #7c2d12; color: #fdba74; }
+    .mission { padding: 0.8rem 0; border-bottom: 1px solid #334155; }
+    .mission:last-child { border-bottom: none; }
+    .mission strong { color: #fbbf24; }
+    .location { font-size: 0.85rem; color: #94a3b8; margin-top: 0.3rem; }
+    .sos-event { padding: 0.6rem 0; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+    .sos-event:last-child { border-bottom: none; }
+    .empty { color: #475569; font-style: italic; }
+    .status-bar { text-align: center; margin-bottom: 1rem; font-size: 0.8rem; color: #475569; }
+    .pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 0.4rem; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  </style>
+</head>
+<body>
+  <h1>🚨 Rescue SOS Dashboard</h1>
+  <div class="status-bar"><span class="pulse"></span>Live — refreshing every 3s</div>
+  <div class="grid">
+    <div class="card">
+      <h2>🚁 Drone Fleet</h2>
+      <div id="drones"><span class="empty">Loading...</span></div>
+    </div>
+    <div class="card">
+      <h2>📡 Active Missions</h2>
+      <div id="missions"><span class="empty">None</span></div>
+    </div>
+    <div class="card">
+      <h2>📋 Recent SOS Events</h2>
+      <div id="events"><span class="empty">None</span></div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api';
+
+    async function refresh() {
+      try {
+        const res = await fetch(`${API}/status`);
+        const data = await res.json();
+
+        // Drones
+        const dronesEl = document.getElementById('drones');
+        if (!data.drones || data.drones.length === 0) {
+          dronesEl.innerHTML = '<span class="empty">No drones</span>';
+        } else {
+          dronesEl.innerHTML = data.drones.map(d => `
+            <div class="drone">
+              <span class="drone-id">${d.id}</span>
+              <span class="badge badge-${d.status}">${d.status}</span>
+            </div>
+          `).join('');
+        }
+
+        // Active missions
+        const missionsEl = document.getElementById('missions');
+        if (!data.active_missions || data.active_missions.length === 0) {
+          missionsEl.innerHTML = '<span class="empty">No active missions</span>';
+        } else {
+          missionsEl.innerHTML = data.active_missions.map(m => {
+            const loc = m.current_location;
+            const locStr = loc ? `${loc.latitude.toFixed(5)}, ${loc.longitude.toFixed(5)}` : 'unknown';
+            return `
+              <div class="mission">
+                <strong>${m.drone_id}</strong> tracking <strong>${m.user_id}</strong> — ${m.status}
+                <div class="location">📍 ${locStr}${loc ? ' (updated ' + new Date(loc.updated_at).toLocaleTimeString() + ')' : ''}</div>
+              </div>`;
+          }).join('');
+        }
+
+        // Recent SOS events
+        const eventsEl = document.getElementById('events');
+        if (!data.recent_sos_events || data.recent_sos_events.length === 0) {
+          eventsEl.innerHTML = '<span class="empty">No events yet</span>';
+        } else {
+          eventsEl.innerHTML = data.recent_sos_events.map(e => `
+            <div class="sos-event">
+              <strong>${e.user_id}</strong> at (${e.latitude}, ${e.longitude}) → <strong>${e.dispatched_drone}</strong>
+              <div class="location">${new Date(e.timestamp).toLocaleString()}</div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        console.error('Failed to fetch status:', err);
+      }
+    }
+
+    refresh();
+    setInterval(refresh, 3000);
+  </script>
+</body>
+</html>
