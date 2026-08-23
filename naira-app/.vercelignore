@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+test_reports/
+.emergent/
+memory/
+.vscode/
+__pycache__/
+*.pyc
+node_modules/
+frontend/dist/
+.venv/
+.metro-cache/

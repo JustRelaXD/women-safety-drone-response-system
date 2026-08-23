@@ -1,0 +1,131 @@
+{
+  "users": [
+    {
+      "id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "name": "Persistence Test User",
+      "email": "sos_test_1787363087@naira.app",
+      "password_hash": "288cdc6fa32da93a92ec4709c93a6ceb$21371b90a0d6f440d3dd97329b8f3b8ba485e71e5ef5844542056f61f6e1cb9d",
+      "created_at": "2026-08-22T01:44:47.932816+00:00"
+    },
+    {
+      "id": "70764209-6992-4552-8290-0f2502c4edae",
+      "name": "Demo User",
+      "email": "demo@naira.app",
+      "password_hash": "45b8dea8ce454154d52d6bd63c984379$dc1fcce69b47600cccefa0ebf6b1feea6bb29e5a37a3584c3336a907176bc776",
+      "created_at": "2026-08-23T02:06:32.860168+00:00"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "Qp1LnC2znt0Z-unCrQ4LScED7uq4hiR1mWJHOJfzHhc",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "created_at": "2026-08-22T01:44:47.932816+00:00"
+    },
+    {
+      "token": "S_C6dMw2RbxTqM5NlVftYovbnEXo1kW-hvvVZ-A2Op8",
+      "user_id": "70764209-6992-4552-8290-0f2502c4edae",
+      "created_at": "2026-08-23T02:06:38.046784+00:00"
+    }
+  ],
+  "contacts": [],
+  "emergencies": [
+    {
+      "id": "NAIRA-F5D966",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "status": "RESOLVED",
+      "trigger_type": "SHAKE_PATTERN",
+      "location": {
+        "latitude": 12.915,
+        "longitude": 74.857
+      },
+      "battery": 88,
+      "network_status": "CONNECTED",
+      "drone": {
+        "id": "DRONE-1",
+        "status": "EN_ROUTE",
+        "battery": 98,
+        "location": {
+          "latitude": 12.9141,
+          "longitude": 74.856
+        },
+        "eta_seconds": 180,
+        "distance_km": 0.15
+      },
+      "station": {
+        "latitude": 12.9141,
+        "longitude": 74.856
+      },
+      "notifications": [],
+      "created_at": "2026-08-22T01:44:47.938143+00:00"
+    }
+  ],
+  "walks": [
+    {
+      "id": "WALK-2F8BBC",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "status": "COMPLETED",
+      "duration_minutes": 15,
+      "start_location": {
+        "latitude": 12.9141,
+        "longitude": 74.856
+      },
+      "started_at": "2026-08-22T01:44:47.934823+00:00",
+      "expected_end_at": "2026-08-22T01:59:47.934823+00:00",
+      "completed_at": "2026-08-22T01:44:47.935893+00:00"
+    }
+  ],
+  "activities": [
+    {
+      "id": "ACT-9EC61FA6",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "action": "USER_SIGNED_UP",
+      "category": "AUTH",
+      "details": {
+        "name": "Persistence Test User",
+        "email": "sos_test_1787363087@naira.app"
+      },
+      "timestamp": "2026-08-22T01:44:47.932816+00:00"
+    },
+    {
+      "id": "ACT-EA7ECF91",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "action": "WALK_STARTED",
+      "category": "WALK",
+      "details": {
+        "walk_id": "WALK-2F8BBC",
+        "duration": 15
+      },
+      "timestamp": "2026-08-22T01:44:47.934823+00:00"
+    },
+    {
+      "id": "ACT-6EBF35D5",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "action": "SAFE_ARRIVAL_CONFIRMED",
+      "category": "WALK",
+      "details": {},
+      "timestamp": "2026-08-22T01:44:47.937138+00:00"
+    },
+    {
+      "id": "ACT-D96A16E9",
+      "user_id": "a5800e97-dd0f-423b-8346-2020e767455f",
+      "action": "SOS_DISPATCHED",
+      "category": "EMERGENCY",
+      "details": {
+        "emergency_id": "NAIRA-F5D966",
+        "drone_id": "DRONE-1",
+        "trigger_type": "SHAKE_PATTERN"
+      },
+      "timestamp": "2026-08-22T01:44:47.938143+00:00"
+    },
+    {
+      "id": "ACT-C1B65733",
+      "user_id": "70764209-6992-4552-8290-0f2502c4edae",
+      "action": "USER_LOGGED_IN",
+      "category": "AUTH",
+      "details": {
+        "email": "demo@naira.app"
+      },
+      "timestamp": "2026-08-23T02:06:38.046865+00:00"
+    }
+  ]
+}

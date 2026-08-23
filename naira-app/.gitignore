@@ -1,0 +1,28 @@
+# Environment / secrets (never commit real credentials)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Node / Expo
+node_modules/
+frontend/dist/
+frontend/.expo/
+.expo/
+.metro-cache/
+
+# Vercel
+.vercel/
+
+# Local scaffolding (not needed for deployment)
+test_reports/
+.emergent/
+memory/
+.vscode/
+
+# OS
+.DS_Store
