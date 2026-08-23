@@ -146,3 +146,31 @@ cd rescue-sos-system/backend && pip install flask && python sos_server.py
 ## Deployments
 
 Each app deploys to Vercel independently (settings mirror in `vercel.json` within each subproject). See per-project READMEs for env var requirements (`VITE_PLANNER_API_URL`, `EXPO_PUBLIC_BACKEND_URL`, `TWILIO_*`, `USE_MOCK_DB`, etc).
+
+## Screenshots
+
+### SOS Dashboard
+
+<img src="./screenshots-and-videos/sos%20dashboard.png" alt="SOS Dashboard" width="100%" />
+
+### Dashboard with SITL
+
+<img src="./screenshots-and-videos/dashboard%20with%20sitl.jpeg" alt="Dashboard with SITL" width="100%" />
+
+### Simulation
+
+<img src="./screenshots-and-videos/simulation.jpeg" alt="Simulation" width="100%" />
+
+<img src="./screenshots-and-videos/simulation%20sitl.jpeg" alt="Simulation with SITL" width="100%" />
+
+### Chatbot
+
+<img src="./screenshots-and-videos/chatbot.png" alt="Chatbot" width="100%" />
+
+### Naira App
+
+<img src="./screenshots-and-videos/naira.png" alt="Naira App" width="100%" />
+
+### Rescue SOS System
+
+<img src="./screenshots-and-videos/Rescue%20SOS%20System.png" alt="Rescue SOS System" width="100%" />
