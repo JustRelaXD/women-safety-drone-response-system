@@ -1,0 +1,7 @@
+node_modules/
+dist/
+public/media/incidents/
+.env
+.DS_Store
+npm-debug.log*
+*:Zone.Identifier
