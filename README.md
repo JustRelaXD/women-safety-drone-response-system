@@ -150,7 +150,9 @@ Each app deploys to Vercel independently (settings mirror in `vercel.json` withi
 
 ## Hardware Demo
 
-[Watch the hardware demonstration video](./hardware-video.mp4)
+[Watch the hardware demonstration video in the repository](./hardware-video.mp4)
+
+[Watch the hardware demonstration on YouTube](https://youtu.be/hJWw36x3pUc?si=vxUgjsTPoMrR-vtl)
 
 ## Screenshots
 
