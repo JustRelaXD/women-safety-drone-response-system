@@ -1,0 +1,77 @@
+{
+  "_readme": "DEMO KNOWLEDGE BASE — NOT PRODUCTION-READY. This is a small, illustrative set of entries used to demonstrate the retrieval -> citation -> disclaimer pipeline described in the spec. Before any real deployment, every entry here must be independently re-verified against India Code (https://www.indiacode.nic.in) and current Government of India notifications by a qualified legal professional, and the retrieval step must be swapped for the full RAG pipeline described in README.md (Phase 3). Do not treat these entries as legal advice or as guaranteed accurate.",
+  "entries": [
+    {
+      "id": "posh-2013-definition",
+      "topic_tags": ["POSH_Act", "sexual_harassment", "definition"],
+      "law": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "section": "Section 2(n) and Section 3",
+      "authority": "Ministry of Women and Child Development, Government of India",
+      "plain_language_summary": "The POSH Act defines sexual harassment at the workplace to include unwelcome acts or behaviour such as physical contact, a demand or request for sexual favours, sexually coloured remarks, showing pornography, or any other unwelcome physical, verbal or non-verbal conduct of a sexual nature. Section 3 prohibits subjecting any woman to sexual harassment at the workplace.",
+      "source_title": "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2104",
+      "source_date": "2013-04-23",
+      "confidence": "high"
+    },
+    {
+      "id": "posh-2013-internal-committee",
+      "topic_tags": ["POSH_Act", "internal_committee", "employer_obligation"],
+      "law": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "section": "Section 4",
+      "authority": "Ministry of Women and Child Development, Government of India",
+      "plain_language_summary": "Every employer with 10 or more employees at a workplace is required to constitute an Internal Committee (sometimes still called an Internal Complaints Committee) to receive and inquire into complaints of sexual harassment. It must be chaired by a senior woman employee and include an external member with expertise on the issue.",
+      "source_title": "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2104",
+      "source_date": "2013-04-23",
+      "confidence": "high"
+    },
+    {
+      "id": "posh-2013-complaint-timeline",
+      "topic_tags": ["POSH_Act", "complaint_process", "deadline"],
+      "law": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "section": "Section 9",
+      "authority": "Ministry of Women and Child Development, Government of India",
+      "plain_language_summary": "A written complaint should generally be made to the Internal Committee (or Local Committee, where applicable) within three months of the date of the incident. The Committee has discretion to extend this period by a further three months if it is satisfied that circumstances prevented the woman from filing earlier.",
+      "source_title": "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2104",
+      "source_date": "2013-04-23",
+      "confidence": "high"
+    },
+    {
+      "id": "posh-2013-confidentiality",
+      "topic_tags": ["POSH_Act", "confidentiality", "complaint_process"],
+      "law": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "section": "Section 16",
+      "authority": "Ministry of Women and Child Development, Government of India",
+      "plain_language_summary": "The Act restricts disclosure of information about the identity of the complainant, respondent, witnesses, and the content of the complaint or inquiry, except in limited circumstances. This is meant to protect people who come forward, though it is not the same as a guarantee of total anonymity.",
+      "source_title": "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2104",
+      "source_date": "2013-04-23",
+      "confidence": "high"
+    },
+    {
+      "id": "posh-2013-non-employer-remedy",
+      "topic_tags": ["POSH_Act", "no_internal_committee", "local_committee"],
+      "law": "Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "section": "Section 6",
+      "authority": "Ministry of Women and Child Development, Government of India",
+      "plain_language_summary": "Where a workplace has fewer than 10 employees, or the complaint is against the employer, or the workplace has no Internal Committee, the woman can approach the Local Committee constituted by the District Officer instead.",
+      "source_title": "The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013",
+      "source_url": "https://www.indiacode.nic.in/handle/123456789/2104",
+      "source_date": "2013-04-23",
+      "confidence": "high"
+    },
+    {
+      "id": "general-non-sexual-harassment-note",
+      "topic_tags": ["workplace_bullying", "discrimination", "general_conflict"],
+      "law": "General note — no single central statute",
+      "section": "n/a",
+      "authority": "n/a",
+      "plain_language_summary": "Unlike sexual harassment, general workplace bullying or non-sexual harassment in India is not governed by one dedicated central statute. Depending on the facts, relevant protection may come from your organisation's HR policy or Standing Orders, general contract/labour law, the Industrial Employment (Standing Orders) Act 1946 (where applicable), anti-discrimination provisions in service rules for government employees, or criminal law provisions if the conduct involves threats, intimidation, or defamation. Because this varies significantly by employment type and state, this system cannot give a confident section-level answer for non-sexual-harassment workplace conflict — please treat this as a pointer to consult a labour lawyer rather than a definitive answer.",
+      "source_title": "n/a — general orientation note, not a citation",
+      "source_url": null,
+      "source_date": null,
+      "confidence": "low"
+    }
+  ]
+}

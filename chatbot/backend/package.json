@@ -1,0 +1,21 @@
+{
+  "name": "safeworkplace-backend",
+  "version": "0.1.0",
+  "description": "Backend for the Workplace Safety & Support platform (Phase 1+2 vertical slice: chat, agent orchestration, safety/situation classification, action planning, curated legal info lookup).",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch --watch-path=server.js --watch-path=src server.js",
+    "test": "node --test tests/unit.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "nanoid": "^5.0.9"
+  }
+}
