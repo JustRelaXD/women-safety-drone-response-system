@@ -1,222 +1,137 @@
 # Women Safety Drone Response System
 
-Real-time women safety workspace built around three related demos: a city drone-response simulation, a stealth SOS system, and an evidence capture service. Together, they model patrol monitoring, silent emergency dispatch, Safe Walk escort flows, incident media capture, and cloud storage for later review.
+A women safety platform built as one end-to-end emergency response system: detect threats, raise an SOS, dispatch the nearest drone, and get support — all in real time. It combines computer vision, drone routing, mobile apps, and an AI chatbot into a single repo of independently deployed projects.
 
-## Summary
+## System Overview
 
-- Live drone-response simulation for monitoring patrol activity and city hotspots.
-- Stealth SOS workflow for discreet emergency response and drone dispatch.
-- Safe Walk escort flow for guided movement support in public spaces.
-- Evidence capture service for uploading, hashing, and retrieving incident media and GPS metadata.
-- Shared workspace that keeps the three demos organized in one repository.
+The pieces fit together as one emergency-response flow:
+
+1. **Detection & alerting** — `women-safety-cv` watches camera + audio feeds for falls, chases, violence, running, and distress sounds/keywords, and raises a fused alert level.
+2. **User-initiated SOS** — `naira-app` (mobile/web) and `rescue-sos-system` (Android app + Flask backend) let a user raise an SOS with live location sharing; trusted contacts get notified via Twilio SMS.
+3. **Dispatch & routing** — `drone-route-optimization` computes building-avoiding GPS waypoints (A* / Theta* over Overture Maps + DuckDB), and `sos-dashboard` is the command center where operators watch drones patrol, respond to SOS alerts, and run Safe Walk escorts.
+4. **Support & follow-up** — `chatbot` provides a private, AI-supported conversation with Indian legal info (POSH Act) and structured case state.
+
+## Deployed Apps
+
+| App | Description | Link |
+| --- | --- | --- |
+| SOS Dashboard | Command center: drone patrols, SOS dispatch, Safe Walk escorts (Patiala demo) | https://sos-dashboard-women-safety.vercel.app/ |
+| Safe Skies Website | Public site | https://safeskieswebsitev1.vercel.app/ |
+| Rescue SOS System | Android SOS app + Flask dispatch backend | https://rescue-sos-system.vercel.app/ |
+| Chatbot | "Here to Listen" workplace safety chatbot | https://chatbot-women-safety.vercel.app/ |
+| Naira App | Safety response network (Expo app + FastAPI) | https://naira-app-women-safety.vercel.app/ |
 
 ## Repository Layout
 
 ```text
 women-safety-drone-response-system/
-├── sos-and-safe-walk-drone-simulation/
-│   ├── src/                # React + TypeScript app source
-│   ├── public/             # Static assets used by the frontend
-│   ├── server.js           # Express server for production/runtime
-│   ├── package.json        # Frontend/runtime scripts and dependencies
-│   ├── 01_schema.sql       # Database schema for the simulation backend
-│   ├── demo.sql            # Sample data for testing
-│   └── vite.config.ts      # Vite build configuration
-├── stealth-sos/
-│   ├── backend/            # FastAPI + Socket.IO guardian drone backend
-│   └── frontend/           # Vite + React stealth SOS interface
-└── evidence-capture/
-    ├── main.py             # FastAPI app for evidence upload and retrieval
-    ├── uploader.py         # Cloudinary upload helper
-    ├── hasher.py           # SHA-256 hashing helper
-    ├── requirements.txt    # Python dependencies
-    └── index.html          # Simple front-end / service page
+├── chatbot/                    # AI workplace-safety support chatbot (React + Node/Express)
+├── naira-app/                  # Safety response network (Expo React Native + FastAPI)
+├── sos-dashboard/              # Drone dispatch & monitoring command center (React + MapLibre)
+├── women-safety-cv/            # Real-time threat detection (YOLO + MediaPipe + audio)
+├── drone-route-optimization/   # Drone route planner (A*/Theta*, DuckDB Spatial, FastAPI)
+├── rescue-sos-system/          # Rescue SOS system (Android app + Flask backend)
+└── screenshots-and-videos/     # Demo media for the platform
 ```
 
-## Folder Overview
+## Projects
 
-### `sos-and-safe-walk-drone-simulation`
+### `chatbot` — Here to Listen
 
-Main drone response demo application.
+A private, AI-supported conversational tool for people in India dealing with workplace harassment, abuse, intimidation, coercion, or discrimination. It listens, helps organize what happened, flags safety concerns, and shares general Indian legal information (POSH Act, 2013) with citations — while being explicit that it is not a lawyer, counsellor, police officer, or emergency service.
 
-- `src/` contains the React UI, map logic, SOS flow, and Safe Walk flow.
-- `public/` stores static assets such as the drone icon.
-- `server.js` runs the Node/Express server used for the built app.
-- `01_schema.sql` and `demo.sql` support the database-backed parts of the demo.
-- `dist/` is the generated production build output.
+- **Frontend:** React + Vite chat UI with typing indicator, safety banner, and privacy controls (delete/export conversation).
+- **Backend:** Node/Express orchestrator coordinating five agents: Response Composer (LISTEN → UNDERSTAND → SAFETY → CLARIFY → SUPPORT → LAW → OPTIONS → PLAN), Situation Understanding, Safety (fails toward caution), Indian Legal Information (with mandatory citations), and Action Planning.
+- **Security:** helmet, CORS allow-list, rate limiting, input validation, prompt-injection guard.
+- **Tests:** 11 unit tests + 12 integration tests (integration needs a live API key).
 
-### `stealth-sos`
+### naira-app — Safety Response Network
 
-Silent SOS demo with a separate backend/frontend split.
+Real-time emergency safety response platform: a FastAPI backend (mock MongoDB + Twilio SMS + drone dispatch simulation) and an Expo React Native frontend with a web build.
 
-- `backend/` contains the FastAPI and Socket.IO service that dispatches the nearest drone.
-- `frontend/` contains the Vite + React UI with shake and keyboard SOS detection.
-- `backend/drone_controller.py` simulates the drone fleet and movement path.
-- `frontend/src/components/` holds the map, detector, drone marker, and arrival controls.
-- `frontend/.env` can point the UI at the local backend through `VITE_SOCKET_URL`.
+- **API:** Vercel serverless entrypoint with Swagger docs at `/docs`; emergency lifecycle endpoints and a WebSocket (`/ws/emergencies/{id}`, REST polling on Vercel).
+- **SMS alerts:** Twilio integration to notify trusted contacts; falls back to `PENDING_PROVIDER_SETUP` without credentials.
+- **Database:** in-memory mock DB seeded from `backend/data/naira_db.json`; set `USE_MOCK_DB=false` + `MONGO_URL` for real MongoDB.
 
-### `evidence-capture`
+### sos-dashboard — Drone Command Center
 
-FastAPI-based evidence capture service.
+Real-time drone dispatch and monitoring visualization, scoped to **Patiala (Punjab)**. Interactive MapLibre GL map with patrol routes, danger-zone heatmaps, live drone tracking, and:
 
-- `main.py` exposes the incident upload and lookup endpoints.
-- `uploader.py` sends uploaded media to Cloudinary.
-- `hasher.py` generates SHA-256 hashes for uploaded evidence.
-- The API accepts video, audio, GPS data, and an `incident_id` per submission.
-- `requirements.txt` lists the Python packages needed to run the service.
-- `__pycache__/` is generated automatically by Python and can be ignored.
-- `index.html` is the lightweight browser-facing UI for the evidence capture demo.
+- **Continuous Patrol Loops** — drones travel predefined corridors at constant speed (segment-by-segment Turf.js + GSAP).
+- **SOS Emergency Dispatch** — nearest drone re-routed to the caller, orbits on arrival, with simulated audio/video telemetry.
+- **Safe Walk Escort** — drone picks up the user and escorts them along a generated safe route with live progress and ETA.
+- **Danger Zone Heatmaps** — high-risk areas as dynamic zoom-adjusted layers.
+- **Planner integration** — patrol loops, SOS legs, and Safe Walk legs are routed by `drone-route-optimization` (building-avoiding), cached in `localStorage`, with graceful straight-line fallback. No-fly zone overlay from the planner's DGCA data.
 
-## Local Setup
+### women-safety-cv — Real-Time Threat Detection
 
-### 1) Prerequisites
+Multi-modal computer vision + audio pipeline detecting threats from a webcam/audio feed, fused into a single alert level:
 
-- Node.js 18+ and npm
-- PostgreSQL if you want the database-backed simulation features
-- Python 3.10+ for the stealth SOS backend and evidence capture service
-- Cloudinary credentials if you want evidence uploads to work
+| Signal | Module | Approach |
+| --- | --- | --- |
+| Fall | `fall_detection.py` | MediaPipe pose landmarks, per person |
+| Running | `running_detection.py` | YOLO bounding-box dynamics |
+| Chase | `chase_detection.py` | Pairwise proximity + motion vectors |
+| Violence | `violence_detection.py` | Close pair + fast repeated wrist motion |
+| Audio distress | `audio_service.py` | YAMNet sound events |
+| Keyword distress | `distress_keywords.py` | faster-whisper transcription |
 
-### 2) Run the drone simulation app
+The fusion engine (`fusion_engine.py`) weights each signal with cross-modal corroboration and debounces asymmetrically (escalate fast, de-escalate slowly). Outputs: MJPEG annotated stream (port 8000), WebSocket alert pushes (port 8765), and saved critical clips. Requires two separate Python envs (`venv_vision`, `venv_audio`) because mediapipe and tensorflow pin conflicting `protobuf` versions.
+
+### drone-route-optimization — Route Planner
+
+Route planner (A* / Theta* / visibility graph) over Overture Maps building and water data, backed by DuckDB Spatial. Outputs GPS waypoints only — no drone protocol — so any controller can use the REST API. Designed to run on a 1 GB Azure VM.
+
+- Direct-line fast path when unobstructed; bounded candidate region generation; row-group pruning and R-tree index verification against an 18.2 M-building Punjab dataset.
+- Benchmark-justified algorithm choice (see its README §7).
+- `frontend/` is a test UI: mission planner, dashboard, live telemetry, mission history, no-fly zone layers.
+- Heavy geospatial data is downloaded at runtime and never committed (see `scripts/download_buildings.py`, `dl_punjab.py`).
+
+### rescue-sos-system — SOS System + Android App
+
+A small, hackathon-style end-to-end SOS system:
+
+- **Flask backend** (`backend/sos_server.py`) — receives SOS from the phone (`POST /sos`), tracks live location (`POST /location`) so a drone can follow a moving person, marks the nearest drone dispatched, and answers `GET /status` for the dashboard.
+- **Android app** (Kotlin, `android-app/`) — shake-triggered SOS with a foreground service.
+- **Vercel serverless entry** (`api/index.py`) wraps the Flask app and serves `index.html`.
+- `docs/STEP_BY_STEP.md` walks through a laptop test in exact order — backend, then phone app, then dashboard.
+
+## Local Development
+
+Each subproject is self-contained; enter it, follow its README. The quick starts:
 
 ```bash
-cd sos-and-safe-walk-drone-simulation
-npm install
+# Chatbot (backend on :3001 by default, frontend with Vite)
+cd chatbot && npm install
+
+# Naira backend + frontend
+cd naira-app/backend && pip install -r requirements.txt && uvicorn server:app --reload --port 8001
+cd naira-app/frontend && npm install
+
+# SOS Dashboard (Patiala command center)
+cd sos-dashboard && npm install && npm run dev   # http://localhost:5173
+
+# Threat detection (two envs required)
+cd women-safety-cv
+python -m venv venv_vision && venv_vision/bin/pip install -r requirements-vision.txt
+python -m venv venv_audio  && venv_audio/bin/pip install -r requirements-audio.txt
+venv_audio/bin/python audio_service.py      # terminal 1
+venv_vision/bin/python unified_detection.py  # terminal 2
+
+# Route planner (uv + DuckDB; see SETUP.md)
+cd drone-route-optimization && uv sync
+
+# SOS system laptop demo: backend first, then Android app (Android Studio), then dashboard
+cd rescue-sos-system/backend && pip install flask && python sos_server.py
 ```
 
-For frontend development:
+## Conventions & Notes
 
-```bash
-npm run dev
-```
+- Each subproject has its own git history-independent lifecycle; this monorepo holds the current working tree of each.
+- Generated folders (`node_modules/`, `dist/`, `__pycache__/`, venvs) and large datasets (building footprints, `.parquet`) are never committed here.
+- Secrets live in per-project env files / Vercel project settings — never commit real `.env` values.
+- `screenshots-and-videos/` holds demo imagery and video.
 
-For the production-style server flow:
+## Deployments
 
-```bash
-npm run build
-npm start
-```
-
-The app is configured to run on `http://localhost:3000` when started through the Node server.
-
-If you want database-backed routing or persistence, configure the database connection in the project environment before starting the server.
-The server reads `DATABASE_URL` and optional `PORT` from the environment.
-
-### 3) Run the stealth SOS demo
-
-```bash
-cd stealth-sos/backend
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python main.py
-```
-
-In a second terminal:
-
-```bash
-cd stealth-sos/frontend
-npm install
-npm run dev
-```
-
-The backend runs on `http://localhost:8000` and the frontend runs on `http://localhost:5173`.
-
-### 4) Run the evidence capture API
-
-```bash
-cd evidence-capture
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-If you are on Windows PowerShell, activate the virtual environment with:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-### 5) Configure environment variables
-
-The simulation project uses a `.env` file for runtime configuration, typically including `DATABASE_URL` and `PORT`.
-
-For the stealth SOS frontend, set `frontend/.env` with `VITE_SOCKET_URL=http://localhost:8000` if you are not using the default backend URL.
-
-For the evidence capture service, update the Cloudinary configuration in `evidence-capture/uploader.py` with your own credentials before deploying.
-
-Note: both the `stealth-sos` backend and the `evidence-capture` API default to port `8000`. Run them separately or change one of the ports if you want both active at the same time.
-
-## Screenshots and Videos
-
-<details>
-<summary><strong>Drone Simulation</strong></summary>
-
-1. Operations deck overview
-
-   <img src="./screenshots-and-videos/p1.jpeg" alt="Operations deck overview" width="100%" />
-
-2. Dashboard status and active incidents
-
-   <img src="./screenshots-and-videos/p2.jpeg" alt="Dashboard status and active incidents" width="100%" />
-
-3. SOS dispatch in progress
-
-   <img src="./screenshots-and-videos/p3.jpeg" alt="SOS dispatch in progress" width="100%" />
-
-4. SOS arrival and audio recording
-
-   <img src="./screenshots-and-videos/p4.jpeg" alt="SOS arrival and audio recording" width="100%" />
-
-5. Safe Walk escort in progress
-
-   <img src="./screenshots-and-videos/p5.jpeg" alt="Safe Walk escort in progress" width="100%" />
-
-</details>
-
-<details>
-<summary><strong>Stealth SOS</strong></summary>
-
-1. Stealth SOS landing screen
-
-   <img src="./screenshots-and-videos/stealth-1.jpeg" alt="Stealth SOS landing screen" width="100%" />
-
-2. Stealth SOS motion trigger view
-
-   <img src="./screenshots-and-videos/stealth-2.jpeg" alt="Stealth SOS motion trigger view" width="100%" />
-
-3. Stealth SOS trigger explanation screen
-
-   <img src="./screenshots-and-videos/stealth-3.jpeg" alt="Stealth SOS trigger explanation screen" width="100%" />
-
-</details>
-
-<details>
-<summary><strong>Evidence Capture</strong></summary>
-
-1. Evidence capture continued recording
-
-   <img src="./screenshots-and-videos/p7.jpeg" alt="Evidence capture continued recording" width="100%" />
-
-2. Evidence file list and stored uploads
-
-   <img src="./screenshots-and-videos/p9.jpeg" alt="Evidence file list and stored uploads" width="100%" />
-
-3. Evidence capture recording and saved entry
-
-   <img src="./screenshots-and-videos/p10.jpeg" alt="Evidence capture recording and saved entry" width="100%" />
-
-4. Evidence capture running with uploaded evidence visible
-
-   <img src="./screenshots-and-videos/p11.jpeg" alt="Evidence capture running with uploaded evidence visible" width="100%" />
-
-5. Cloudinary asset library view
-
-   <img src="./screenshots-and-videos/p12.png" alt="Cloudinary asset library view" width="100%" />
-
-</details>
-
-## Notes
-
-- The simulation and evidence capture service are separate subprojects under this root folder.
-- Generated folders such as `dist/`, `node_modules/`, and `__pycache__/` are build/runtime artifacts.
+Each app deploys to Vercel independently (settings mirror in `vercel.json` within each subproject). See per-project READMEs for env var requirements (`VITE_PLANNER_API_URL`, `EXPO_PUBLIC_BACKEND_URL`, `TWILIO_*`, `USE_MOCK_DB`, etc).
